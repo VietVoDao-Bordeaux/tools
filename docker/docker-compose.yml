@@ -1,0 +1,38 @@
+version: "3"
+services:
+    # nginx + php-fpm container
+    # Only one nginx/php container for all apps (otherwise we would have to deal
+    # with different ports for each app)
+    # To connect to this container:
+    # docker exec -it adbm_nginx bash
+    vovinam-nginx:
+        container_name: vovinam_nginx
+        image: vovinam_nginx
+        build:
+            context: nginx
+        ports:
+            - 80:80
+            - 443:443
+        extra_hosts:
+            - "admin.local.vovinam.fr:127.0.0.1"
+            - "www.local.vovinam.fr:127.0.0.1"
+        volumes: # Sync changes in docker-compose-mac.yml if you add/change volumes
+            - ../../frontend/vovinam:/var/www/frontend/vovinam
+            - ../../drupal:/var/www/drupal
+            - ./dashboard:/var/www/default
+
+    # MySql for the drupal app
+    vovinam-mysql-admin:
+        image: vovinam_mysql_admin
+        build:
+            context: mysql
+        container_name: vovinam_mysql_admin
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: vovinam_admin
+            MYSQL_USER: vovinam_admin
+            MYSQL_PASSWORD: vovinam_admin
+
+

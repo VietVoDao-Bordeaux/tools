@@ -1,0 +1,16 @@
+# =====================================
+#
+# Overrides docker-compose.yml to define Docker Sync volume for Mac users
+#
+# =====================================
+version: "3"
+services:
+    vovinam-nginx:
+        volumes: # Sync changes in docker-sync.yml if you add/change volumes
+            - vovinam-front-sync:/var/www/frontend:nocopy
+            - vovinam-admin-sync:/var/www/drupal:nocopy
+volumes:
+    vovinam-front-sync:
+        external: true
+    vovinam-admin-sync:
+        external: true
